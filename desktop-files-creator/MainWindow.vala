@@ -21,7 +21,7 @@ namespace Creator {
             GLib.Object(application: application,
                          title: "Desktop Files Creator",
                          resizable: true,
-                         height_request: 450,
+                         height_request: 650,
                          width_request: 450,
                          border_width: 10);
         }        
