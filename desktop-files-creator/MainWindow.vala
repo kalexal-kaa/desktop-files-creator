@@ -143,6 +143,7 @@ namespace Creator {
    
    private void on_show_file(){
        text_view.buffer.text=desktop_file();
+       path_to_file="";
    }
    
    private void on_open_clicked () {
@@ -171,28 +172,6 @@ namespace Creator {
         }
         file_chooser.destroy ();
     }
-    
-    private void open_file (string filename) {
-        string text;
-        try {
-            FileUtils.get_contents (filename, out text);
-            this.text_view.buffer.text = text;
-        } catch (Error e) {
-            stderr.printf ("Error: %s\n", e.message);
-        }
-    }
-    
-    private void save_file (string filename, string text) {
-        try {
-            FileUtils.set_contents (filename, text);
-        } catch (Error e) {
-            stderr.printf ("Error: %s\n", e.message);
-        }
-    }
-    
-   private bool is_empty(string str){
-        return str.strip().length == 0;
-      }
     
    private void on_clear_clicked(){
        if(is_empty(text_view.buffer.text)){
@@ -224,7 +203,7 @@ namespace Creator {
          if(file.query_exists()){
             alert("Delete failed");
          }else{
-             if(text_view.buffer.text==""){
+             if(is_empty(text_view.buffer.text)){
                  alert("File "+file.get_basename()+" is deleted!");
              }else{
                  text_view.buffer.text="";
@@ -277,14 +256,35 @@ Categories="+entry_categories.get_text().strip();
          }
    }
    
+    private void open_file (string filename) {
+        string text;
+        try {
+            FileUtils.get_contents (filename, out text);
+            this.text_view.buffer.text = text;
+        } catch (Error e) {
+            stderr.printf ("Error: %s\n", e.message);
+        }
+    }
+    
+    private void save_file (string filename, string text) {
+        try {
+            FileUtils.set_contents (filename, text);
+        } catch (Error e) {
+            stderr.printf ("Error: %s\n", e.message);
+        }
+    }
+    
+   private bool is_empty(string str){
+        return str.strip().length == 0;
+      }
+    
    private void alert (string str){
           var dialog = new Gtk.MessageDialog(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, str);
           dialog.set_title("Message");
           dialog.run();
           dialog.destroy();
     }
-        
-    }    
+  }    
 }        
         
         
