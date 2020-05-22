@@ -204,6 +204,7 @@ namespace Creator {
           Gtk.ResponseType result = (ResponseType)dialog_clear_file.run ();
           if(result==Gtk.ResponseType.OK){
               text_view.buffer.text="";
+              path_to_file="";
           }
           dialog_clear_file.destroy();
    }
