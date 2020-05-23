@@ -202,7 +202,6 @@ namespace Creator {
          var dialog_save_file = new Gtk.MessageDialog(this, Gtk.DialogFlags.MODAL,Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Save file "+file.get_basename()+" ?");
          dialog_save_file.set_title("Question");
          Gtk.ResponseType result = (ResponseType)dialog_save_file.run ();
-         dialog_save_file.destroy();
          if(result==Gtk.ResponseType.OK){
          try {
             FileUtils.set_contents (file.get_path(), text_view.buffer.text);
@@ -210,6 +209,7 @@ namespace Creator {
             stderr.printf ("Error: %s\n", e.message);
         }
       }
+      dialog_save_file.destroy();
    }
    
    private void on_delete_clicked(){
