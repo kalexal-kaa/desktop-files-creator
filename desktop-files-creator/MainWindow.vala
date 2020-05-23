@@ -25,6 +25,7 @@ namespace Creator {
         public MainWindow(Gtk.Application application) {
             GLib.Object(application: application,
                          title: "Desktop Files Creator",
+                         window_position: WindowPosition.CENTER,
                          resizable: true,
                          height_request: 450,
                          width_request: 400,
