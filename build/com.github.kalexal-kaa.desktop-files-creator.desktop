@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Desktop Files Creator
+Comment=GenericName=
+Exec=com.github.kalexal-kaa.desktop-files-creator %U
+Icon=com.github.kalexal-kaa.desktop-files-creator
+Terminal=false
+Categories=Utility;GTK;Development;
+Keywords=Develop
