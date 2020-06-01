@@ -6,6 +6,7 @@ namespace Creator {
    
    private Stack stack;
    private Box vbox_create_page;
+   private Box vbox_list_page;
    private Box vbox_edit_page;
    private Gtk.ListStore list_store;
    private TreeView tree_view;
@@ -75,7 +76,7 @@ namespace Creator {
         var button_create = new Button.with_label("CREATE");
         button_create.clicked.connect(on_create_file);
         var button_edit = new Button.with_label("EDIT >>>");
-        button_edit.clicked.connect(on_edit_clicked);
+        button_edit.clicked.connect(go_to_list_page);
         vbox_create_page = new Box(Orientation.VERTICAL,20);
         vbox_create_page.pack_start(hbox_name,false,true,0);
         vbox_create_page.pack_start(hbox_exec,false,true,0);
@@ -87,23 +88,23 @@ namespace Creator {
         vbox_create_page.pack_start(button_create,true,false,0);
         vbox_create_page.pack_start(button_edit,true,false,0);
         stack.add(vbox_create_page);
-        var toolbar = new Toolbar ();
-        toolbar.get_style_context ().add_class (STYLE_CLASS_PRIMARY_TOOLBAR);
-        var save_icon = new Gtk.Image.from_icon_name ("document-save", IconSize.SMALL_TOOLBAR);
+        var toolbar_list_page = new Toolbar ();
+        toolbar_list_page.get_style_context ().add_class (STYLE_CLASS_PRIMARY_TOOLBAR);
+        var back_icon_list_page = new Gtk.Image.from_icon_name ("go-previous", IconSize.SMALL_TOOLBAR);
+        var edit_icon = new Gtk.Image.from_icon_name ("document-properties", IconSize.SMALL_TOOLBAR);
         var delete_icon = new Gtk.Image.from_icon_name ("edit-delete", IconSize.SMALL_TOOLBAR);
-        var clear_icon = new Gtk.Image.from_icon_name ("edit-clear", IconSize.SMALL_TOOLBAR);
-        var save_button = new Gtk.ToolButton (save_icon, "Save");
-        save_button.is_important = true;
+        var back_button_list_page = new Gtk.ToolButton (back_icon_list_page, "Back");
+        back_button_list_page.is_important = true;
+        var edit_button = new Gtk.ToolButton (edit_icon, "Edit");
+        edit_button.is_important = true;
         var delete_button = new Gtk.ToolButton (delete_icon, "Delete");
         delete_button.is_important = true;
-        var clear_button = new Gtk.ToolButton (clear_icon, "Clear");
-        clear_button.is_important = true;
-        toolbar.add(save_button);
-        toolbar.add(delete_button);
-        toolbar.add(clear_button);
-        save_button.clicked.connect (on_save_clicked);
+        toolbar_list_page.add(back_button_list_page);
+        toolbar_list_page.add(edit_button);
+        toolbar_list_page.add(delete_button);
+        back_button_list_page.clicked.connect (go_to_create_page);
         delete_button.clicked.connect (on_delete_clicked);
-        clear_button.clicked.connect (on_clear_clicked);
+        edit_button.clicked.connect (on_edit_clicked);
    list_store = new Gtk.ListStore(Columns.N_COLUMNS, typeof(string));
            tree_view = new TreeView.with_model(list_store);
            var text = new CellRendererText ();
@@ -113,23 +114,40 @@ namespace Creator {
            tree_view.append_column (column);
            tree_view.set_headers_visible (false);
            tree_view.cursor_changed.connect(on_select_item);
-   var scroll_tree_view = new ScrolledWindow (null, null);
-        scroll_tree_view.set_policy (PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
-        scroll_tree_view.add (this.tree_view);
-        text_view = new TextView ();
-        text_view.editable = true;
-        text_view.cursor_visible = true;
-        text_view.set_wrap_mode (Gtk.WrapMode.WORD);
-        var scroll_text_view = new ScrolledWindow (null, null);
-        scroll_text_view.set_policy (PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
-        scroll_text_view.add (text_view);
-        var button_back = new Button.with_label("<<< BACK");
-        button_back.clicked.connect(on_back_clicked);
-        vbox_edit_page = new Box(Orientation.VERTICAL,20);
-        vbox_edit_page.pack_start(toolbar,false,true,0);
-        vbox_edit_page.pack_start(scroll_tree_view,true,true,0);
-        vbox_edit_page.pack_start(scroll_text_view,true,true,0);
-        vbox_edit_page.pack_start(button_back,false,true,0);
+   var scroll_list_page = new ScrolledWindow (null, null);
+        scroll_list_page.set_policy (PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
+        scroll_list_page.add (this.tree_view);
+        vbox_list_page = new Box(Orientation.VERTICAL,20);
+        vbox_list_page.pack_start(toolbar_list_page,false,true,0);
+        vbox_list_page.pack_start(scroll_list_page,true,true,0);
+        stack.add(vbox_list_page);
+        var toolbar_edit_page = new Toolbar ();
+        toolbar_edit_page.get_style_context ().add_class (STYLE_CLASS_PRIMARY_TOOLBAR);
+        var back_icon_edit_page = new Gtk.Image.from_icon_name ("go-previous", IconSize.SMALL_TOOLBAR);
+        var save_icon = new Gtk.Image.from_icon_name ("document-save", IconSize.SMALL_TOOLBAR);
+        var clear_icon = new Gtk.Image.from_icon_name ("edit-clear", IconSize.SMALL_TOOLBAR);
+        var back_button_edit_page = new Gtk.ToolButton (back_icon_edit_page, "Back");
+        back_button_edit_page.is_important = true;
+        var save_button = new Gtk.ToolButton (save_icon, "Save");
+        save_button.is_important = true;
+        var clear_button = new Gtk.ToolButton (clear_icon, "Clear");
+        clear_button.is_important = true;
+        toolbar_edit_page.add (back_button_edit_page);
+        toolbar_edit_page.add (save_button);
+        toolbar_edit_page.add (clear_button);
+        back_button_edit_page.clicked.connect (go_to_list_page);
+        save_button.clicked.connect (on_save_clicked);
+        clear_button.clicked.connect (on_clear_clicked);
+        this.text_view = new TextView ();
+        this.text_view.editable = true;
+        this.text_view.cursor_visible = true;
+        this.text_view.set_wrap_mode (Gtk.WrapMode.WORD);
+        var scroll_edit_page = new ScrolledWindow (null, null);
+        scroll_edit_page.set_policy (PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
+        scroll_edit_page.add (this.text_view);
+        vbox_edit_page = new Box (Orientation.VERTICAL, 0);
+        vbox_edit_page.pack_start (toolbar_edit_page, false, true, 0);
+        vbox_edit_page.pack_start (scroll_edit_page, true, true, 0);
         stack.add(vbox_edit_page);
         stack.visible_child = vbox_create_page;
         directory_path = Environment.get_home_dir()+"/.local/share/applications";
@@ -178,12 +196,31 @@ namespace Creator {
    }
    
    private void on_edit_clicked(){
+        var selection = tree_view.get_selection();
+           selection.set_mode(SelectionMode.SINGLE);
+           TreeModel model;
+           TreeIter iter;
+           if (!selection.get_selected(out model, out iter)) {
+               alert("Choose a file");
+               return;
+           }
         stack.visible_child = vbox_edit_page;
-        show_desktop_files();
+        string text;
+        try {
+            FileUtils.get_contents (directory_path+"/"+item, out text);
+            text_view.buffer.text = text;
+        } catch (Error e) {
+            stderr.printf ("Error: %s\n", e.message);
+        }
    }
    
-   private void on_back_clicked(){
+   private void go_to_create_page(){
         stack.visible_child = vbox_create_page;
+   }
+   
+   private void go_to_list_page(){
+        stack.visible_child = vbox_list_page;
+        show_desktop_files();
    }
    
    private void on_save_clicked(){
@@ -265,13 +302,6 @@ namespace Creator {
            if (index >= 0) {
                item = list.nth_data(index);
            }
-        string text;
-        try {
-            FileUtils.get_contents (directory_path+"/"+item, out text);
-            text_view.buffer.text = text;
-        } catch (Error e) {
-            stderr.printf ("Error: %s\n", e.message);
-        }
        }
    
    private void create_desktop_file(){
