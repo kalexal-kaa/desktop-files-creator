@@ -39,32 +39,56 @@ namespace Creator {
         stack.set_transition_type (StackTransitionType.SLIDE_LEFT_RIGHT);
         add (stack);
         entry_name = new Entry();
+        entry_name.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear");
+        entry_name.icon_press.connect ((pos, event) => {
+        if (pos == Gtk.EntryIconPosition.SECONDARY) {
+            entry_name.set_text ("");
+           }
+        });
         var label_name = new Label.with_mnemonic ("_Name:");
         var hbox_name = new Box (Orientation.HORIZONTAL, 20);
         hbox_name.pack_start (label_name, false, true, 0);
         hbox_name.pack_start (this.entry_name, true, true, 0);
         entry_exec = new Entry();
+        entry_exec.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "document-open");
+        entry_exec.icon_press.connect ((pos, event) => {
+        if (pos == Gtk.EntryIconPosition.SECONDARY) {
+              on_open_exec();
+           }
+        });
         var label_exec = new Label.with_mnemonic ("_Exec:");
-        var button_exec = new Button.with_label("OPEN");
-        button_exec.clicked.connect(on_open_exec);
         var hbox_exec = new Box (Orientation.HORIZONTAL, 20);
         hbox_exec.pack_start (label_exec, false, true, 0);
         hbox_exec.pack_start (this.entry_exec, true, true, 0);
-        hbox_exec.pack_start(button_exec,true,true,0);
         entry_icon = new Entry();
+        entry_icon.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "document-open");
+        entry_icon.icon_press.connect ((pos, event) => {
+        if (pos == Gtk.EntryIconPosition.SECONDARY) {
+              on_open_icon();
+           }
+        });
         var label_icon = new Label.with_mnemonic ("_Icon:");
-        var button_icon = new Button.with_label("OPEN");
-        button_icon.clicked.connect(on_open_icon);
         var hbox_icon = new Box (Orientation.HORIZONTAL, 20);
         hbox_icon.pack_start (label_icon, false, true, 0);
         hbox_icon.pack_start (this.entry_icon, true, true, 0);
-        hbox_icon.pack_start(button_icon,true,true,0);
         entry_categories = new Entry();
+        entry_categories.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear");
+        entry_categories.icon_press.connect ((pos, event) => {
+        if (pos == Gtk.EntryIconPosition.SECONDARY) {
+            entry_categories.set_text ("");
+           }
+        });
         var label_categories = new Label.with_mnemonic ("_Categories:");
         var hbox_categories = new Box (Orientation.HORIZONTAL, 20);
         hbox_categories.pack_start (label_categories, false, true, 0);
         hbox_categories.pack_start (this.entry_categories, true, true, 0);
         entry_comment = new Entry();
+        entry_comment.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear");
+        entry_comment.icon_press.connect ((pos, event) => {
+        if (pos == Gtk.EntryIconPosition.SECONDARY) {
+            entry_comment.set_text ("");
+           }
+        });
         var label_comment = new Label.with_mnemonic ("_Comment:");
         var hbox_comment = new Box (Orientation.HORIZONTAL, 20);
         hbox_comment.pack_start (label_comment, false, true, 0);
@@ -76,7 +100,7 @@ namespace Creator {
         var button_create = new Button.with_label("CREATE");
         button_create.clicked.connect(on_create_file);
         var button_edit = new Button.with_label("EDIT >>>");
-        button_edit.clicked.connect(go_to_list_page);
+        button_edit.clicked.connect(go_to_list_page_from_create_page);
         vbox_create_page = new Box(Orientation.VERTICAL,20);
         vbox_create_page.pack_start(hbox_name,false,true,0);
         vbox_create_page.pack_start(hbox_exec,false,true,0);
@@ -135,7 +159,7 @@ namespace Creator {
         toolbar_edit_page.add (back_button_edit_page);
         toolbar_edit_page.add (save_button);
         toolbar_edit_page.add (clear_button);
-        back_button_edit_page.clicked.connect (go_to_list_page);
+        back_button_edit_page.clicked.connect (go_to_list_page_from_edit_page);
         save_button.clicked.connect (on_save_clicked);
         clear_button.clicked.connect (on_clear_clicked);
         this.text_view = new TextView ();
@@ -218,20 +242,16 @@ namespace Creator {
         stack.visible_child = vbox_create_page;
    }
    
-   private void go_to_list_page(){
+   private void go_to_list_page_from_create_page(){
         stack.visible_child = vbox_list_page;
         show_desktop_files();
    }
    
+   private void go_to_list_page_from_edit_page(){
+        stack.visible_child = vbox_list_page;
+   }
+   
    private void on_save_clicked(){
-        var selection = tree_view.get_selection();
-           selection.set_mode(SelectionMode.SINGLE);
-           TreeModel model;
-           TreeIter iter;
-           if (!selection.get_selected(out model, out iter)) {
-               alert("Choose a file");
-               return;
-           }
            if(is_empty(text_view.buffer.text)){
              alert("Nothing to save");
              return;
