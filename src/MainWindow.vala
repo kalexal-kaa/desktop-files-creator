@@ -115,7 +115,7 @@ namespace Creator {
         var toolbar_list_page = new Toolbar ();
         toolbar_list_page.get_style_context ().add_class (STYLE_CLASS_PRIMARY_TOOLBAR);
         var back_icon_list_page = new Gtk.Image.from_icon_name ("go-previous", IconSize.SMALL_TOOLBAR);
-        var edit_icon = new Gtk.Image.from_icon_name ("document-properties", IconSize.SMALL_TOOLBAR);
+        var edit_icon = new Gtk.Image.from_icon_name ("accessories-text-editor", IconSize.SMALL_TOOLBAR);
         var delete_icon = new Gtk.Image.from_icon_name ("edit-delete", IconSize.SMALL_TOOLBAR);
         var back_button_list_page = new Gtk.ToolButton (back_icon_list_page, "Back");
         back_button_list_page.is_important = true;
