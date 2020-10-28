@@ -4,7 +4,7 @@ namespace Creator {
         public MainWindow app_window;
 
         public Application() {
-            Object(flags: ApplicationFlags.FLAGS_NONE);
+            Object(flags: ApplicationFlags.FLAGS_NONE, application_id: "com.github.alexkdeveloper.dfc");
         }
 
         protected override void activate() {
